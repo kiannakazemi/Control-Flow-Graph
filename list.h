@@ -18,34 +18,34 @@ struct list;
 
 typedef list* List;
 
-/* Cleans the list*/
+/*delets all the list elements*/
 void clear(List&); 
 
-/* Modifies the element in position pos*/   
+/*modifies the element in pos position*/   
 void set(int, Elem, List&); 
 
-/* inserts the element in pos position, shifting the other elements to the right*/
+/*inserts the element in pos position, shifting the other elements to the right*/
 void add(int, Elem, List&); 
 
-/* Inserts the element at the end of the list*/
+/*inserts the element at the end of the list*/
 void addBack(Elem, List&);  
 
-/* Inserts the element at the beginning of the list*/
+/*inserts the element at the beginning of the list*/
 void addFront(Elem, List&); 
 
-/* Deletes the element in pos position*/
+/*deletes the element in pos position*/
 void removePos(int, List&); 
 
-/* Returns the element in pos position*/
+/*returns the element in pos position*/
 Elem get(int, const List&);	
 
-/* Creates and returns an empty list*/
+/*creates and returns an empty list*/
 List createEmpty();        
 
-/*Returns true if the list is empty*/
+/*returns true if the list is empty*/
 bool isEmpty(const List&);
 
-/*Returns the size of the list*/
+/*returns the size of the list*/
 int size(const List&);
 }
 
