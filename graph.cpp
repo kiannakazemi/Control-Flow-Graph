@@ -3,7 +3,6 @@
 
 using namespace graph;
 
-
 struct halfEdgeVertex{
 	vertexNode* vertPtr;  //label of the destination vertex
 	Weight weight;        //edge label
@@ -20,7 +19,6 @@ struct graph::vertexNode{
 	vertexNode * next;
 	bool visited;
 };
-
 
 Graph graph::createEmptyGraph(){
 	return emptyGraph;
@@ -232,40 +230,25 @@ graph::Graph firstNode(graph::Graph& g){
 	return min;
 }
 
-/*useful functions for randomWalk*/
-
-bool allNextEdgesVisited(halfEdgeVertex * arco); // Dato un arco (il primo), ritorna true se esso e i successivi nella lista di adicenza sono già visitati
-bool allNextEdgesUnvisited(halfEdgeVertex * arco); // Dato un arco (il primo), ritorna true se esso e i successivi nella lista di adicenza non sono già visitati
-halfEdgeVertex * chooseRandomEdge(halfEdgeVertex * arco); // Dato un arco (il primo), ritorna un arco casuale nella stessa sua lista
-halfEdgeVertex * chooseUnvisitedEdge(halfEdgeVertex * arco); // Dato un arco (il primo), ritorna un arco non visitato nella stessa sua lista
-
-// Restituisce la lista di label di nodi risultante dal cammino casuale sul grafo, secondo le regole indicate nel pdf
-list::List randomWalk(graph::Graph& g){
-	// Parto dal nodo con etichetta minore
-	Graph nodoVisitato = firstNode(g);
-	list::List walk = list::createEmpty();
-	// Inserisco il primo nodo nella lista
-	addBack(nodoVisitato->label, walk);
-	while(nodoVisitato->label != lastNode(g)){ // Proseguo finchè non sono arrivato al nodo con etichetta maggiore
-		halfEdgeVertex * arcoProssimo = emptyAdjList;
-		if(allNextEdgesVisited(nodoVisitato->adjList) || allNextEdgesUnvisited(nodoVisitato->adjList)) // Se tutti gli archi uscenti dal nodo sono visitati o non visitati
-			arcoProssimo = chooseRandomEdge(nodoVisitato->adjList); // Scelta casuale del prossimo arco dalla lista di adiacenza del nodo attuale
-		else
-			arcoProssimo = chooseUnvisitedEdge(nodoVisitato->adjList); // Diversamente, scelgo il prossimo arco tra quelli non ancora visitati
-		// Lo segno come visitato
-		arcoProssimo->visited = true;
-		// E aggiungo il prossimo nodo alla lista
-		list::addBack(arcoProssimo->vertPtr->label, walk);
-		// Mi sposto sul prossimo nodo, puntato dall'arco scelto
-		nodoVisitato = arcoProssimo->vertPtr;
-	}
-	return walk;
-}
-
-
 /*********************************Useful functions for randomWalk*****************************************/
 
 //Given an edge (the first), it returns true if the given edge and its following edges in the adjacency list are already visited
+bool allNextEdgesVisited(halfEdgeVertex * arco); 
+
+//Given an edge (the first), it returns true if the given edge and its following edges in the adjacency list aren't already visited
+bool allNextEdgesUnvisited(halfEdgeVertex * arco);
+
+//Given an edge (the first),it returns a random edge
+halfEdgeVertex * chooseRandomEdge(halfEdgeVertex * arco);
+
+//Given an edge (the first), it returns an unvisited edge
+halfEdgeVertex * chooseUnvisitedEdge(halfEdgeVertex * arco); 
+
+
+
+
+/*********************************Implementation of useful functions for randomWalk*****************************************/
+
 bool allNextEdgesVisited(halfEdgeVertex * arco){
 	while(arco != emptyAdjList){
 		if(!arco->visited)
@@ -275,7 +258,6 @@ bool allNextEdgesVisited(halfEdgeVertex * arco){
 	return true;
 }
 
-//Given an edge (the first), it returns true if the given edge and its following edges in the adjacency list aren't already visited
 bool allNextEdgesUnvisited(halfEdgeVertex * arco){
 	while(arco != emptyAdjList){
 		if(arco->visited)
@@ -285,7 +267,6 @@ bool allNextEdgesUnvisited(halfEdgeVertex * arco){
 	return true;
 }
 
-//Given an edge (the first),it returns a random edge
 halfEdgeVertex * chooseRandomEdge(halfEdgeVertex * primoArco){
 	int count = 0;
 	halfEdgeVertex * tmp = primoArco;
@@ -303,7 +284,6 @@ halfEdgeVertex * chooseRandomEdge(halfEdgeVertex * primoArco){
 	return tmp;
 }
 
-//Given an edge (the first), it returns an unvisited edge
 halfEdgeVertex * chooseUnvisitedEdge(halfEdgeVertex * primoArco){
 	halfEdgeVertex * tmp = primoArco;
 	while(tmp != emptyAdjList){ //Scrolling through the adjacency list
@@ -323,4 +303,26 @@ int visitedEdges(graph::Graph& g){
 		}
 	}
 	return count;
+}
+
+//returns the list of node labels resulting from the random path on the graph
+list::List randomWalk(graph::Graph& g){
+	//start from the minimum labeled node
+	Graph nodoVisitato = firstNode(g);
+	list::List walk = list::createEmpty();
+	// Insert the first node in the list
+	addBack(nodoVisitato->label, walk);
+	while(nodoVisitato->label != lastNode(g)){ //continue until I get to the node with the highest label
+		halfEdgeVertex * arcoProssimo = emptyAdjList;
+		if(allNextEdgesVisited(nodoVisitato->adjList) || allNextEdgesUnvisited(nodoVisitato->adjList))
+			arcoProssimo = chooseRandomEdge(nodoVisitato->adjList); 
+		else
+			arcoProssimo = chooseUnvisitedEdge(nodoVisitato->adjList)
+		//mark it as visited
+		arcoProssimo->visited = true;
+		// add the next node to the list
+		list::addBack(arcoProssimo->vertPtr->label, walk);
+		nodoVisitato = arcoProssimo->vertPtr;
+	}
+	return walk;
 }
