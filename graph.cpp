@@ -245,10 +245,7 @@ halfEdgeVertex * chooseRandomEdge(halfEdgeVertex * arco);
 halfEdgeVertex * chooseUnvisitedEdge(halfEdgeVertex * arco); 
 
 
-
-
 /*********************************Implementation of useful functions for randomWalk*****************************************/
-
 bool allNextEdgesVisited(halfEdgeVertex * arco){
 	while(arco != emptyAdjList){
 		if(!arco->visited)
@@ -305,7 +302,6 @@ int visitedEdges(graph::Graph& g){
 	return count;
 }
 
-//returns the list of node labels resulting from the random path on the graph
 list::List randomWalk(graph::Graph& g){
 	//start from the minimum labeled node
 	Graph nodoVisitato = firstNode(g);
